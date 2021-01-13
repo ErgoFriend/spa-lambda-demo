@@ -1,0 +1,29 @@
+name: SAM Validate, Build, Test, Deploy
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  api:
+    name: deploy SAM
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install awscli
+        pip install aws-sam-cli
+     - name: Configure AWS credentials for prod
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+        aws-region: ap-northeast-1
+    - name: deploy to prod
+      run: bash deploy.sh
+      shell: bash

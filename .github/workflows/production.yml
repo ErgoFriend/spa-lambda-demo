@@ -1,0 +1,74 @@
+name: Deploy to production
+on:
+  workflow_run:
+    workflows:
+      - build-test
+    branches:
+      - main
+    types:
+      - completed
+jobs:
+  api:
+    name: deploy SAM
+    runs-on: ubuntu-latest
+    steps:
+    - steps:
+      - name: ENV
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCESS_KEY_ID_PROD }}" >> $GITHUB_ENV 
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY_PROD }}" >> $GITHUB_ENV
+          echo "S3_BUCKET_NAME=${S3_BUCKET_NAME}" >> $GITHUB_ENV 
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install awscli
+        pip install aws-sam-cli
+     - name: Configure AWS credentials for prod
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ env.AWS_ACCOUNT_ID }}
+        aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-1
+    - name: deploy to prod
+      run: bash deploy.sh
+      shell: bash
+
+  spa:
+    name: build and deploy to s3
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [15.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
+    - name: s3 sync
+      uses: jakejarvis/s3-sync-action@master
+      with:
+        args: --acl public-read --follow-symlinks --delete
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: 'ap-northeast-1'
+        AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+        SOURCE_DIR: 'dist'
+    - name: invalidate cloudfront
+      uses: chetan/invalidate-cloudfront-action@master
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: 'ap-northeast-1'
+        DISTRIBUTION: ${{ secrets.AWS_CF_DISTRIBUTION }}
+        PATHS: '/*'
