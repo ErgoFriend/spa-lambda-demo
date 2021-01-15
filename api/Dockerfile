@@ -20,8 +20,11 @@ WORKDIR /api
 COPY . .
 RUN apk add --update-cache make
 RUN apk add --update-cache git
-RUN go get -u github.com/aws/aws-lambda-go/lambda
-RUN go get -u github.com/aws/aws-lambda-go/event
+RUN go get github.com/cespare/reflex
+RUN chmod +x /go/bin/reflex
+#RUN go get -u github.com/aws/aws-lambda-go/lambda
+#RUN go get -u github.com/aws/aws-lambda-go/events
+RUN make build
 
 EXPOSE 3000
 CMD ["make", "watch"]

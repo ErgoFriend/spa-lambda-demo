@@ -1,17 +1,20 @@
 build:
-	make deps && make recompile
+	make deps && make compile
 
-recompile:
+compile:
 	env GOOS=linux go build -o greet/greet greet/main.go
 
 deps:
-	cd ./greet && go mod download
+	#cd ./greet && go mod download
+	#cd ./greet && go get -u ./...
+	go get -u github.com/aws/aws-lambda-go/lambda
+	go get -u github.com/aws/aws-lambda-go/events
 
 supervise:
-	supervisor --no-restart-on exit -e go --exec make -- recompile
+	reflex -g '*.go' make compile
 
 start-api:
 	sam local start-api --host 0.0.0.0
 
 watch:
-	make build &&	make supervise & make start-api
+	make supervise & make start-api

@@ -4,7 +4,7 @@ on:
     workflows:
       - build-test
     branches:
-      - main
+      - master
     types:
       - completed
 jobs:

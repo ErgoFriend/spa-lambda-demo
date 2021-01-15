@@ -9,7 +9,13 @@ on:
 
 jobs:
   api:
-
+    name: deploy SAM
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    steps:
+    - uses: actions/checkout@v2
 
   spa:
     name: build and deploy to s3
