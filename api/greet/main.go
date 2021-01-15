@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"math/rand"
+	"time"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -40,10 +42,21 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		return events.APIGatewayProxyResponse{}, ErrNoIP
 	}
 
+	formats := []string{
+        "ハロー、スプートニク。",
+        "you copy?",
+        "i copy.",
+    }
+
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("Hello, %v", string(ip)),
+		Body:
+			fmt.Sprintf("%v> %s\n",string(ip),formats[rand.Intn(len(formats))]),
 		StatusCode: 200,
 	}, nil
+}
+
+func init() {
+    rand.Seed(time.Now().UnixNano())
 }
 
 func main() {

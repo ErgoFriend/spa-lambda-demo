@@ -2,17 +2,18 @@ version: "3"
 
 services:
   aws-sam-local:
-    image: cnadiminti/aws-sam-local
-    command: local start-api --docker-volume-basedir "$PWD/api" --host 0.0.0.0
+    container_name: lambda-api
+    build:
+        context: ./api
+        dockerfile: Dockerfile
     ports:
       - '3000:3000'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./api:/var/opt
+      - ./api:/api
   dynamodb-local:
     container_name: dynamodb
     image: amazon/dynamodb-local
-    build: ./
     ports:
       - 8000:8000
     command: -jar DynamoDBLocal.jar -dbPath /data -sharedDb
@@ -23,12 +24,12 @@ services:
   spa:
     container_name: vue-spa
     build: 
-      context: ./spa/
+      context: ./spa
       dockerfile: Dockerfile
     ports:
         - 8080:8080
     volumes: 
-        - .:/app
+        - ./spa:/app
       
 networks:
   lambda-local:
