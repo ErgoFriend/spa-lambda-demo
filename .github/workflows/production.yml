@@ -19,7 +19,7 @@ jobs:
     - uses: falnyr/aws-sam-deploy-action@v1.2.1
     # https://github.com/marketplace/actions/aws-sam-deploy
       env:
-        TEMPLATE: 'template.yaml'
+        TEMPLATE: 'api/template.yaml'
         AWS_STACK_NAME: demo-api
         AWS_REGION: 'ap-northeast-1'
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
