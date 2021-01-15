@@ -9,7 +9,7 @@ on:
 
 jobs:
   api:
-    name: deploy SAM
+    name: test API
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -18,8 +18,11 @@ jobs:
     - uses: actions/checkout@v2
 
   spa:
-    name: build and deploy to s3
+    name: test SPA
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: spa
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
