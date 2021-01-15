@@ -10,7 +10,7 @@ services:
       - '3000:3000'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./api:/api
+      - ./api:/app
   dynamodb-local:
     container_name: dynamodb
     image: amazon/dynamodb-local

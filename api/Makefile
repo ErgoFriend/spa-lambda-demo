@@ -2,7 +2,7 @@ build:
 	make deps && make compile
 
 compile:
-	env GOOS=linux go build -o greet/greet greet/main.go
+	env GOOS=linux CGO_ENABLED=0 go build "-ldflags=-s -w -buildid=" -trimpath -o greet/greet greet/main.go
 
 deps:
 	#cd ./greet && go mod download
@@ -10,11 +10,11 @@ deps:
 	go get -u github.com/aws/aws-lambda-go/lambda
 	go get -u github.com/aws/aws-lambda-go/events
 
-supervise:
-	reflex -g '*.go' make compile
+hr:
+	reflex -c reflex.conf
 
-start-api:
+api:
 	sam local start-api --host 0.0.0.0
 
 watch:
-	make supervise & make start-api
+	make hr & make api

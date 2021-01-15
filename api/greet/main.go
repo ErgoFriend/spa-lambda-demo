@@ -46,6 +46,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
         "ハロー、スプートニク。",
         "you copy?",
         "i copy.",
+        "21atmp11fa1e",
     }
 
 	return events.APIGatewayProxyResponse{
