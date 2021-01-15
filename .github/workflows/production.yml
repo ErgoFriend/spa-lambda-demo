@@ -21,7 +21,7 @@ jobs:
       env:
         TEMPLATE: 'template.yaml'
         AWS_STACK_NAME: demo-api
-        AWS_REGION: 'us-east-1'
+        AWS_REGION: 'ap-northeast-1'
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_DEPLOY_BUCKET: ${{ secrets.AWS_DEPLOY_BUCKET }}
@@ -32,22 +32,25 @@ jobs:
     defaults:
       run:
         working-directory: spa
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
       with:
         node-version: '12'
-    - run: npm install
-    - run: npm test
-    - run: npm build
+    - run: npm run install
+    - run: npm run test
+    - run: npm run build
     - uses: reggionick/s3-deploy@v3
     # https://github.com/marketplace/actions/s3-deploy
       with:
-        folder: build
+        folder: dist
         bucket: ${{ secrets.S3_BUCKET }}
-        bucket-region: ${{ secrets.S3_BUCKET_REGION }}
-        dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-        invalidation: /
+        bucket-region: 'ap-northeast-1'
+        #dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+        #invalidation: /
         delete-removed: true
         no-cache: true
-        private: true
+        #private: true
