@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Sample SAM Template for api
+
+Globals:
+  Function:
+    Timeout: 5
+
+Resources:
+  GreetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: api/greet
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /greet
+            Method: GET
+
+Outputs:
+  GreetAPI:
+    Description: "API Gateway endpoint URL for Prod environment for First Function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/greet/"
+  GreetFunction:
+    Description: "First Lambda Function ARN"
+    Value: !GetAtt GreetFunction.Arn
+  GreetFunctionIamRole:
+    Description: "Implicit IAM Role created for Hello World function"
+    Value: !GetAtt GreetFunctionRole.Arn

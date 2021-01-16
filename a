@@ -1,0 +1,19 @@
+2021-01-16 13:31:28,445 | Found one Lambda function with name 'GreetFunction'
+2021-01-16 13:31:28,446 | Invoking main (go1.x)
+2021-01-16 13:31:28,446 | No environment variables found for function 'GreetFunction'
+2021-01-16 13:31:28,446 | Environment variables overrides data is standard format
+2021-01-16 13:31:28,446 | Loading AWS credentials from session with profile 'None'
+2021-01-16 13:31:30,471 | Resolving code path. Cwd=/home/kasu/github/spa-lambda-demo/sam, CodeUri=api/greet
+2021-01-16 13:31:30,471 | Resolved absolute path to code is /home/kasu/github/spa-lambda-demo/sam/api/greet
+2021-01-16 13:31:30,471 | Code /home/kasu/github/spa-lambda-demo/sam/api/greet is not a zip/jar file
+2021-01-16 13:31:30,480 | Skip pulling image and use local one: amazon/aws-sam-cli-emulation-image-go1.x:rapid-1.15.0.
+
+2021-01-16 13:31:30,480 | Mounting /home/kasu/github/spa-lambda-demo/sam/api/greet as /var/task:ro,delegated inside runtime container
+2021-01-16 13:31:30,712 | Starting a timer for 5 seconds for function 'GreetFunction'
+START RequestId: d7debe02-3603-400d-a0b8-f150e027e370 Version: $LATEST
+END RequestId: d7debe02-3603-400d-a0b8-f150e027e370
+REPORT RequestId: d7debe02-3603-400d-a0b8-f150e027e370  Init Duration: 0.15 ms  Duration: 770.28 ms     Billed Duration: 800 ms Memory Size: 128 MB     Max Memory Used: 128 MB
+2021-01-16 13:31:32,731 | Cleaning all decompressed code dirs
+2021-01-16 13:31:32,731 | No Content-Type given. Defaulting to 'application/json'.
+2021-01-16 13:31:32 127.0.0.1 - - [16/Jan/2021 13:31:32] "GET /greet HTTP/1.1" 200 -
+2021-01-16 13:31:32 127.0.0.1 - - [16/Jan/2021 13:31:32] "GET /favicon.ico HTTP/1.1" 403 -
